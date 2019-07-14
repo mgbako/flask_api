@@ -21,11 +21,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = sqldb
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 
-# Create DB Tables
-@app.before_first_request
-def create_tables():
-  db.create_all()
-
 jwt = JWT(app, authenticate, identity)
 
 api.add_resource(Item, '/items/<string:name>')
