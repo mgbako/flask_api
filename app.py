@@ -1,3 +1,5 @@
+import os 
+
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
@@ -17,11 +19,16 @@ app.secret_key = 'john'
 postresdb = 'postgresql://localhost/appdb'
 sqldb = 'sqlite:///data.db'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = sqldb
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', postresdb)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 
 jwt = JWT(app, authenticate, identity)
+
+# Create DB Tables
+@app.before_first_request
+def create_table():
+  db.create_all()
 
 api.add_resource(Item, '/items/<string:name>')
 api.add_resource(StoreController, '/stores/<string:name>')
