@@ -39,4 +39,4 @@ class StoreController(Resource):
 
 class StoreListController(Resource):
     def get(self):
-        return {'stores': list(map(lambda x: x.json(),  Store.query.all()))}, 201
+        return {'stores': [x.json() for x in Store.find_all()]}, 201
